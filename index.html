@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JVM Options Selector</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>JVM Options Selector</h1>
+    <label for="jdkVersion">Select JDK Version:</label>
+    <select id="jdkVersion" onchange="loadGCOptions()">
+      <option value="" disabled selected>Select version</option>
+      <option value="jdk8">JDK 8</option>
+      <option value="jdk11">JDK 11</option>
+      <option value="jdk17">JDK 17</option>
+      <option value="jdk21">JDK 21</option>
+    </select>
+    <label for="gcType">Select Garbage Collector:</label>
+    <select id="gcType" onchange="loadJVMOptions()" disabled>
+      <!-- Options will be populated dynamically -->
+    </select>
+    <h3>Select Memory Options:</h3>
+    <div>
+      <label for="xms">-Xms (Initial Heap Size):</label>
+      <input type="text" id="xms" value="512m" placeholder="e.g., 512m or 1g" onchange="updateSelectedOptions()">
+    </div>
+    <div>
+      <label for="xmx">-Xmx (Maximum Heap Size):</label>
+      <input type="text" id="xmx" value="2g" placeholder="e.g., 1g or 2g" onchange="updateSelectedOptions()">
+    </div>
+    <div>
+      <label for="maxMetaspace">-XX:MaxMetaspaceSize:</label>
+      <input type="text" id="maxMetaspace" value="256m" placeholder="e.g., 128m or 256m" onchange="updateSelectedOptions()">
+    </div>
+    <h3 id="gcOptionsHeader" style="display:none">Select Garbage Collector Options:</h3>
+    <div id="gcOptionsContainer"></div>
+    <div>
+      <label for="customOption">Add Additional JVM Options:</label>
+      <input type="text" id="customOption" placeholder="Enter custom JVM option">
+      <button onclick="addCustomOption()">Add Option</button>
+    </div>
+    <div>
+    <label for="jvmOptions">Selected JVM Options:</label>
+      <textarea id="jvmOptions" readonly></textarea>
+    </div>
+    <button onclick="copyText()">Copy to Clipboard</button>
+    <button onclick="clearOptions()">Clear Options</button>
+  </div>
+  <!-- Modal for Copy Confirmation -->
+  <div id="copyModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <p id="modalMessage">Text copied successfully!</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
