@@ -1,58 +1,55 @@
+const gcSupportByJDK = {
+  jdk8: { default: "parallelgc", supported: ["parallelgc", "cms", "g1gc"] },
+  jdk11: { default: "g1gc", supported: ["parallelgc", "g1gc", "zgc"] },
+  jdk17: { default: "g1gc", supported: ["parallelgc", "g1gc", "zgc", "shenandoah"] },
+  jdk21: { default: "g1gc", supported: ["parallelgc", "g1gc", "zgc", "shenandoah"] }
+};
 const memoryOptions = {
   common: [
-    { option: '-Xms', description: 'Initial Heap Size', editable: true, defaultValue: '512m', placeholder: 'e.g., 512m or 1g' },
-    { option: '-Xmx', description: 'Maximum Heap Size', editable: true, defaultValue: '2g', placeholder: 'e.g., 1g or 2g' },
-    { option: '-XX:MetaspaceSize', description: 'Metaspace Size', editable: true, defaultValue: '256m', placeholder: 'e.g., 128m or 256m' },
-    { option: '-XX:MaxMetaspaceSize', description: 'Maximum metaspace Size', editable: true, defaultValue: '256m', placeholder: 'e.g., 128m or 256m' },
-    { option: '-Xss', description: 'Thread Stack Size:', editable: true, defaultValue: '256k', placeholder: 'e.g., 256k or 512k' }
+    { option: "-Xms", description: "Initial Heap Size", operator: "", editable: true, defaultValue: "512m", placeholder: "e.g., 512m or 1g" },
+    { option: "-Xmx", description: "Maximum Heap Size", operator: "", editable: true, defaultValue: "2g", placeholder: "e.g., 1g or 2g" },
+    { option: "-XX:MetaspaceSize", description: "Metaspace Size", operator: "=", editable: true, defaultValue: "256m", placeholder: "e.g., 128m or 256m" },
+    { option: "-XX:MaxMetaspaceSize", description: "Maximum metaspace Size", operator: "", editable: true, defaultValue: "256m", placeholder: "e.g., 128m or 256m" },
+    { option: "-Xss", description: "Thread Stack Size:", operator: "", editable: true, defaultValue: "256k", placeholder: "e.g., 256k or 512k" }
   ],
 };
-
-const gcSupportByJDK = {
-  jdk8: { default: 'parallelgc', supported: ['parallelgc', 'cms', 'g1gc'] },
-  jdk11: { default: 'g1gc', supported: ['parallelgc', 'g1gc', 'zgc'] },
-  jdk17: { default: 'g1gc', supported: ['parallelgc', 'g1gc', 'zgc', 'shenandoah'] },
-  jdk21: { default: 'g1gc', supported: ['parallelgc', 'g1gc', 'zgc', 'shenandoah'] }
-};
-
 const jvmOptions = {
   parallelgc: {
     common: [
       { option: "-XX:+UseParallelGC", description: "Enables the Parallel garbage collector." },
       { option: "-XX:+UseAdaptiveSizePolicy", description: "Enables adaptive generation sizing." },
-      { option: "-XX:ParallelGCThreads", description: "Sets the number of threads for parallel GC.", editable: true, defaultValue: "4", placeholder:"e.g, 4" }
+      { option: "-XX:ParallelGCThreads", description: "Sets the number of threads for parallel GC.", operator: "=", editable: true, defaultValue: "4", placeholder:"e.g, 4" }
     ],
   },
   cms: {
     common: [
       { option: "-XX:+UseConcMarkSweepGC", description: "Enables the Concurrent Mark-Sweep (CMS) garbage collector." },
       { option: "-XX:+CMSParallelRemarkEnabled", description: "Enables parallel remark phase during CMS collection." },
-      { option: "-XX:CMSInitiatingOccupancyFraction", description: "Start CMS collection when heap is 75% full.", editable: true, defaultValue: "75", placeholder:"e.g, 75" }
+      { option: "-XX:CMSInitiatingOccupancyFraction", description: "Start CMS collection when heap is 75% full.", operator: "=", editable: true, defaultValue: "75", placeholder:"e.g, 75" }
     ],
   },
   g1gc: {
     common: [
       { option: "-XX:+UseG1GC", description: "Enables the G1 garbage collector." },
-      { option: "-XX:G1HeapRegionSize", description: "Sets the G1 heap region size.", editable: true, defaultValue: "32M", placeholder:"e.g, 32M" },
-      { option: "-XX:MaxGCPauseMillis", description: "Sets a target for maximum GC pause time.", editable: true, defaultValue: "200", placeholder:"e.g, 200" }
+      { option: "-XX:G1HeapRegionSize", description: "Sets the G1 heap region size.", operator: "=", editable: true, defaultValue: "32M", placeholder:"e.g, 32M" },
+      { option: "-XX:MaxGCPauseMillis", description: "Sets a target for maximum GC pause time.", operator: "=", editable: true, defaultValue: "200", placeholder:"e.g, 200" }
     ],
   },
   zgc: {
     common: [
       { option: "-XX:+UseZGC", description: "Enables the Z Garbage Collector (ZGC)." },
       { option: "-XX:+ZUncommit", description: "Allows the heap to be uncommitted when unused." },
-      { option: "-XX:ZUncommitDelay", description: "Sets the delay (in seconds) for uncommiting unused memory.", editable: true, defaultValue: "30", placeholder:"e.g, 30" }
+      { option: "-XX:ZUncommitDelay", description: "Sets the delay (in seconds) for uncommiting unused memory.", operator: "=", editable: true, defaultValue: "30", placeholder:"e.g, 30" }
     ],
   },
   shenandoah: {
     common: [
       { option: "-XX:+UseShenandoahGC", description: "Enables the Shenandoah garbage collector." },
       { option: "-XX:+ShenandoahUncommit", description: "Uncommits memory when unused." },
-      { option: "-XX:ShenandoahUncommitDelay", description: "Delay in seconds before uncommiting memory.", editable: true, defaultValue: "30", placeholder:"e.g, 30" }
+      { option: "-XX:ShenandoahUncommitDelay", description: "Delay in seconds before uncommiting memory.", operator: "=", editable: true, defaultValue: "30", placeholder:"e.g, 30" }
     ],
   }
 };
-
 const gcPrintOptions = {
   jdk8: [
     { option: "-XX:+PrintGC", description: "Prints basic GC information." },
@@ -79,7 +76,6 @@ const gcPrintOptions = {
     { option: "-Xlog:gc=info:file=gc.log:tags,time:filecount=5,filesize=1M", description: "Logs GC information at the info level to a file with time tags, rotating files." }
   ]
 };
-
 const selectedOptions = [];
 
 function addOptionToContainer(option, selectedGC, version, index, container) {
@@ -116,7 +112,7 @@ function addOptionToContainer(option, selectedGC, version, index, container) {
 function loadMemoryOptions() {
   const container = document.getElementById('memOptionsContainer');
   const header = document.getElementById('memOptionsHeader');
-  container.innerHTML = ''; // Clear previous options
+  container.innerHTML = ""; // Clear previous options
 
   memoryOptions.common.forEach((option, index) => {
     addOptionToContainer(option, 'memory', 'common', index, container)
@@ -129,11 +125,11 @@ function loadGCOptions() {
   const gcSelector = document.getElementById('gcType');
 
   gcSelector.disabled = false;
-  gcSelector.value = ''; // Reset GC selector
+  gcSelector.value = ""; // Reset GC selector
   // Get supported GC options for the selected JDK version
   const supportedGCs = gcSupportByJDK[selectedVersion].supported;
   const defaultGC = gcSupportByJDK[selectedVersion].default;
-  gcSelector.innerHTML = ''; // Clear previous options
+  gcSelector.innerHTML = ""; // Clear previous options
   // Add the supported GC options to the dropdown
   supportedGCs.forEach(gc => {
     const option = document.createElement('option');
@@ -151,7 +147,7 @@ function loadJVMOptions() {
   const selectedGC = document.getElementById('gcType').value;
   const container = document.getElementById('gcOptionsContainer');
   const header = document.getElementById('gcOptionsHeader');
-  container.innerHTML = ''; // Clear previous options
+  container.innerHTML = ""; // Clear previous options
   if (selectedGC && selectedVersion && jvmOptions[selectedGC]) {
     let optionsAdded = false;
     // Add common options
@@ -205,7 +201,7 @@ function updateSelectedOptions() {
         if (checkbox.checked) {
           if (option.editable) {
             const inputValue = document.getElementById(`${option.option}-value`).value;
-            selectedOptionsList.push(`${option.option}${option.operator || ''}${inputValue}`);
+            selectedOptionsList.push(`${option.option}${option.operator || ""}${inputValue}`);
           } else {
             selectedOptionsList.push(option.option);
           }
@@ -230,7 +226,7 @@ function updateSelectedOptions() {
   }
   selectedOptionsList.push(...selectedOptions);
   // Update textarea with selected options
-  document.getElementById('jvmOptions').value = selectedOptionsList.join('\n');
+  document.getElementById('jvmOptions').value = selectedOptionsList.join(' ');
 }
 
 // Add a custom JVM option
@@ -239,7 +235,7 @@ function addCustomOption() {
   if (customOption) {
     selectedOptions.push(customOption);
     updateSelectedOptions();
-    document.getElementById('customOption').value = ''; // Clear input
+    document.getElementById('customOption').value = ""; // Clear input
   }
 }
 
@@ -266,18 +262,18 @@ function clearOptions() {
   const memOptionsHeader = document.getElementById('memOptionsHeader');
 
   // Reset gcType and jdkVersion dropdowns
-  jdkVersion.value = '';
-  gcType.value = '';
+  jdkVersion.value = "";
+  gcType.value = "";
   gcType.disabled = true;
 
   // Clear all checkboxes and input fields
-  gcOptionsContainer.innerHTML = ''; // Clear the container
-  memOptionsContainer.innerHTML = ''; // Clear the container
+  gcOptionsContainer.innerHTML = ""; // Clear the container
+  memOptionsContainer.innerHTML = ""; // Clear the container
   gcOptionsHeader.style.display = 'none'; // Hide the header
   memOptionsHeader.style.display = 'none'; // Hide the header
 
   // Clear the textarea
-  document.getElementById('jvmOptions').value = '';
+  document.getElementById('jvmOptions').value = "";
 
   // Reload the options
   loadMemoryOptions();

@@ -1,4 +1,4 @@
-# jvm-options-selector
+# jvm-options
 
 This tool is designed to help configure JVM parameters easily, particularly for selecting appropriate garbage collection strategies and fine-tuning memory settings. The various GC options are tailored to the JDK versions they are compatible with.
 This code represents the JavaScript logic for a "JVM Options" tool that allows users to configure and select JVM options based on the JDK version and garbage collector they are using. Here's a breakdown of the key functionality.
